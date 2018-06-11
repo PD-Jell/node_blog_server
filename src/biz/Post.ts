@@ -4,8 +4,9 @@ import { ApiResult } from '../config/result';
 import { ApiResultCode } from '../config/enum';
 
 export interface PostService {
-  getPostAll: () => Promise<Post[]>
+  getPostAll: () => Promise<ApiResult>
   getPostOne: (title: string, year: number, month: number, day: number) => Promise<ApiResult>
+  insertPost: (category: string, title: string, context: string, writer: string) => Promise<ApiResult>
 }
 
 export const PostService = () => {
@@ -13,8 +14,12 @@ export const PostService = () => {
 }
 
 class PostImpl implements PostService {
-  getPostAll = (): Promise<Post[]> => {
-    return dao.getPostAll()
+  getPostAll = async (): Promise<ApiResult> => {
+    const result = await dao.getPostAll()
+    return {
+      result: ApiResultCode.success,
+      object: result
+    }
   }
 
   getPostOne = async (title: string, year: number, month: number, day: number): Promise<ApiResult> => {
@@ -30,4 +35,18 @@ class PostImpl implements PostService {
       }
     }
   }
-}
+
+  insertPost = async (category: string, title: string, context: string, writer: string='jell'): Promise<ApiResult> => {
+    const result: any = await dao.insertPost(category, title, context, writer)
+    console.log('result', JSON.stringify(result))
+    if (result.errno) {
+      throw {
+        result: ApiResultCode.internal_error,
+        object: undefined
+      }
+    }
+    return {
+      result: ApiResultCode.success,
+      object: result
+    }
+ }}

@@ -25,3 +25,10 @@ export const getPostOne = async (title: string, year: number, month: number, day
   })
   return posts
 }
+
+export const insertPost = async (category: string, title: string, context: string, writer: string): Promise<any> => {
+  const params = [category, title, context, writer]
+  const result: any = await executeQueryWithConnect(query.insertPost, params)
+  if (!result.errno) return result
+  else throw result
+}

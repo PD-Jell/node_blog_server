@@ -1,7 +1,7 @@
 
 export interface Post {
   id?: number
-  div: string
+  category: string
   title: string
   context: string
   writer: string
@@ -11,7 +11,7 @@ export interface Post {
 export const postFromDB = (post: any): Post => {
   return {
     id: post.id,
-    div: post.div,
+    category: post.category,
     title: post.title,
     context: post.context,
     writer: post.writer
